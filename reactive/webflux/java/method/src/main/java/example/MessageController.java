@@ -18,6 +18,7 @@ package example;
 
 import reactor.core.publisher.Mono;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,8 +38,8 @@ public class MessageController {
 	}
 
 	@GetMapping("/message")
-	public Mono<String> message() {
-		return this.messages.findMessage();
+	public Mono<String> message(@AuthenticationPrincipal(expression="username") String name) {
+		return Mono.just(name);
 	}
 
 	@GetMapping("/secret")
