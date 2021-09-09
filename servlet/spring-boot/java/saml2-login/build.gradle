@@ -6,8 +6,8 @@ plugins {
 }
 
 repositories {
-	jcenter()
-	maven { url "https://repo.spring.io/snapshot" }
+	mavenLocal()
+	mavenCentral()
 	maven { url "https://build.shibboleth.net/nexus/content/repositories/releases/" }
 }
 
