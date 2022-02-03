@@ -17,6 +17,7 @@
 package example;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.saml2.provider.service.authentication.Saml2AuthenticatedPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,4 +34,10 @@ public class IndexController {
 		return "index";
 	}
 
+	@GetMapping("/with-user-details")
+	public String index(Model model, @AuthenticationPrincipal UserDetails principal) {
+		String emailAddress = principal.getUsername();
+		model.addAttribute("emailAddress", emailAddress);
+		return "index";
+	}
 }

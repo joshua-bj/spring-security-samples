@@ -82,6 +82,9 @@ public class Saml2LoginApplicationITests {
 		this.mvc.perform(get("http://localhost:8080/").session((MockHttpSession) session))
 				.andExpect(model().attribute("emailAddress", "testuser@spring.security.saml"))
 				.andExpect(model().attribute("userAttributes", USER_ATTRIBUTES));
+
+		this.mvc.perform(get("http://localhost:8080/with-user-details").session((MockHttpSession) session))
+				.andExpect(model().attribute("emailAddress", "testuser@spring.security.saml"));
 	}
 
 	@Test
