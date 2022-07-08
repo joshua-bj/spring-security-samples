@@ -65,7 +65,7 @@ public class Saml2LoginApplicationITests {
 		username.type("testuser@spring.security.saml");
 		password.type("12345678");
 		submit.click();
-		this.webClient.waitForBackgroundJavaScript(10000);
+		waitForPage("Spring Security - SAML 2.0 Login & Logout", 60000);
 	}
 
 	private HtmlForm findForm(HtmlPage login) {
@@ -80,6 +80,20 @@ public class Saml2LoginApplicationITests {
 			}
 		}
 		throw new IllegalStateException("Could not resolve login form");
+	}
+
+	private void waitForPage(String title, long maxWaitMillis) throws InterruptedException {
+		long start = System.nanoTime();
+		long now = start;
+		long maxWaitNanos = maxWaitMillis * 1000000;
+		while (now - start < maxWaitNanos) {
+			HtmlPage home = (HtmlPage) this.webClient.getCurrentWindow().getEnclosedPage();
+			if (home.getTitleText().equals(title)) {
+				return;
+			}
+			Thread.sleep(1000);
+			now = System.nanoTime();
+		}
 	}
 
 }
