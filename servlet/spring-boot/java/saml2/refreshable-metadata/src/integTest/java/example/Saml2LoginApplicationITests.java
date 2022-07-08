@@ -65,7 +65,7 @@ public class Saml2LoginApplicationITests {
 		username.type("testuser@spring.security.saml");
 		password.type("12345678");
 		submit.click();
-		waitForPage("Spring Security - SAML 2.0 Login & Logout", 60000);
+		waitForPage("Spring Security - SAML 2.0 Login & Logout", 6000000);
 	}
 
 	private HtmlForm findForm(HtmlPage login) {
