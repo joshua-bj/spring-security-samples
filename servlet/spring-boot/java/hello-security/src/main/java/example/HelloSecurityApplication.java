@@ -17,6 +17,13 @@ package example;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 /**
  * Hello Security application.
@@ -25,6 +32,36 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 public class HelloSecurityApplication {
+
+	@Bean
+	SecurityFilterChain chain(HttpSecurity http) throws Exception {
+		http.authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated());
+		http.formLogin();
+		http.sessionManagement((session) -> session
+				.invalidSessionUrl("/")
+				.sessionConcurrency((concurrency) -> concurrency
+						.maximumSessions(1)
+						.maxSessionsPreventsLogin(true)
+				)
+		);
+		return http.build();
+	}
+
+	@Bean
+	HttpSessionEventPublisher publisher() {
+		return new HttpSessionEventPublisher();
+	}
+
+	@Bean
+	public UserDetailsService userDetailsService() {
+		return new InMemoryUserDetailsManager(
+				User.withDefaultPasswordEncoder()
+						.username("user")
+						.password("password")
+						.authorities("app")
+						.build()
+		);
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(HelloSecurityApplication.class, args);
