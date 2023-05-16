@@ -18,6 +18,7 @@ package org.springframework.security.samples.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.core.userdetails.User
@@ -34,11 +35,13 @@ class SecurityConfig {
 
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
-        http.authorizeRequests()
+        http.authorizeHttpRequests()
             .requestMatchers("/css/**").permitAll()
             .requestMatchers("/user/**").hasAuthority("ROLE_USER")
-            .and()
-            .formLogin().loginPage("/log-in")
+            .requestMatchers(HttpMethod.POST, "/graphql").hasAuthority("ROLE_ADMIN")
+            .anyRequest().permitAll().and()
+            .formLogin().loginPage("/log-in").and()
+            .httpBasic().and().csrf().disable()
         return http.build()
     }
 

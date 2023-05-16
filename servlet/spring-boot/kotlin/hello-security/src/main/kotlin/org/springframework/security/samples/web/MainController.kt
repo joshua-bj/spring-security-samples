@@ -18,6 +18,8 @@ package org.springframework.security.samples.web
 
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.ResponseBody
 
 /**
  * @author Eleftheria Stein
@@ -33,6 +35,12 @@ class MainController {
     @GetMapping("/user/index")
     fun userIndex(): String {
         return "user/index"
+    }
+
+    @PostMapping("/graphql")
+    @ResponseBody
+    fun graphql(): String {
+        return "ok"
     }
 
     @GetMapping("/log-in")
