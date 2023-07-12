@@ -17,6 +17,10 @@ package example;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * OAuth2 Log In application.
@@ -25,6 +29,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 public class OAuth2LoginApplication {
+
+	@Bean
+	SecurityFilterChain appSecurity(HttpSecurity http) throws Exception {
+		http
+			.oauth2Login(Customizer.withDefaults())
+			.oidcLogout((oidc) -> oidc.backChannel((back) -> {}))
+			.authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated());
+
+		return http.build();
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(OAuth2LoginApplication.class, args);
