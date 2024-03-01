@@ -18,9 +18,18 @@ package example;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.authorization.method.PrePostTemplateDefaults;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 @SpringBootApplication
+@EnableMethodSecurity
 public class DataApplication {
+
+	@Bean
+	PrePostTemplateDefaults templateDefaults() {
+		return new PrePostTemplateDefaults();
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(DataApplication.class, args);

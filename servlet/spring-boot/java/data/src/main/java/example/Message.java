@@ -23,9 +23,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.authorization.method.AuthorizeResult;
 
 @Entity
+@AuthorizeResult
 public class Message {
 
 	@Id
@@ -65,6 +68,7 @@ public class Message {
 		this.created = created;
 	}
 
+	@AuthorizeRead("message")
 	public String getText() {
 		return this.text;
 	}
@@ -73,6 +77,7 @@ public class Message {
 		this.text = text;
 	}
 
+	@AuthorizeRead("message")
 	public String getSummary() {
 		return this.summary;
 	}

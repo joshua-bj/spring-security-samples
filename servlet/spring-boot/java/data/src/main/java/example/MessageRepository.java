@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.security.authorization.method.AuthorizeResult;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Repository;
  * @author Rob Winch
  */
 @Repository
+@AuthorizeResult
 public interface MessageRepository extends CrudRepository<Message, Long> {
 	@Query("select m from Message m where m.to.id = ?#{ authentication.name }")
 	List<Message> findAll();

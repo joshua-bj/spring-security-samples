@@ -21,6 +21,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 /**
  * A user.
  *
@@ -48,6 +50,7 @@ public class User {
 		this.id = id;
 	}
 
+	@AuthorizeRead("user")
 	public String getFirstName() {
 		return this.firstName;
 	}
@@ -56,6 +59,7 @@ public class User {
 		this.firstName = firstName;
 	}
 
+	@AuthorizeRead("user")
 	public String getLastName() {
 		return this.lastName;
 	}
