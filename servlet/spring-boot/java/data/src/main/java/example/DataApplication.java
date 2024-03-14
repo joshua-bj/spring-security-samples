@@ -16,19 +16,48 @@
 
 package example;
 
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Role;
+import org.springframework.security.authorization.AuthorizationProxyFactoryPredicate;
+import org.springframework.security.authorization.SkipAuthorizationProxyFactoryPredicate;
 import org.springframework.security.authorization.method.PrePostTemplateDefaults;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @SpringBootApplication
 @EnableMethodSecurity
 public class DataApplication {
 
 	@Bean
+	@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+	static AuthorizationProxyFactoryPredicate skipValueTypes() {
+		return SkipAuthorizationProxyFactoryPredicate.skipValueTypes();
+	}
+
+	@Bean
 	PrePostTemplateDefaults templateDefaults() {
 		return new PrePostTemplateDefaults();
+	}
+
+	@Bean
+	public UserDetailsService userDetailsService() {
+		return new InMemoryUserDetailsManager(
+			User.withDefaultPasswordEncoder()
+				.username("rob")
+				.password("password")
+				.authorities("message:read", "user:read")
+				.build(),
+			User.withDefaultPasswordEncoder()
+				.username("luke")
+				.password("password")
+				.authorities("message:read")
+				.build()
+		);
 	}
 
 	public static void main(String[] args) {

@@ -16,12 +16,10 @@
 
 package example;
 
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
-import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  * A user.
@@ -29,6 +27,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
  * @author Rob Winch
  */
 @Entity(name="users")
+@JsonSerialize(as = User.class, contentUsing = JsonSerializer.class)
 public class User {
 
 	@Id

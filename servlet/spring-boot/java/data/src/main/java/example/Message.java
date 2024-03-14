@@ -18,17 +18,18 @@ package example;
 
 import java.time.Instant;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.authorization.method.AuthorizeResult;
+import org.springframework.security.authorization.method.AuthorizeReturnObject;
 
 @Entity
-@AuthorizeResult
+@JsonSerialize(as = Message.class)
+@AuthorizeReturnObject
 public class Message {
 
 	@Id

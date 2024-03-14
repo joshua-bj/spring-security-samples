@@ -1,11 +1,13 @@
 plugins {
 	alias(libs.plugins.org.springframework.boot)
 	alias(libs.plugins.io.spring.dependency.management)
+	id "org.graalvm.buildtools.native" version "0.9.28"
 	id "nebula.integtest" version "8.2.0"
 	id 'java'
 }
 
 ext['spring-security.version'] = '6.3.0-SNAPSHOT'
+ext['spring-framework.version'] = '6.1.4'
 
 repositories {
 	mavenCentral()
