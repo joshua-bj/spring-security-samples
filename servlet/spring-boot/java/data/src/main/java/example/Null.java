@@ -16,16 +16,16 @@
 
 package example;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.aopalliance.intercept.MethodInvocation;
 
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authorization.AuthorizationResult;
+import org.springframework.security.authorization.method.MethodAuthorizationDeniedHandler;
+import org.springframework.stereotype.Component;
 
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-@PreAuthorize(value = "hasAuthority('{value}:read')", handlerClass = Null.class)
-public @interface AuthorizeRead {
-	String value();
+@Component
+public class Null implements MethodAuthorizationDeniedHandler {
+	@Override
+	public Object handle(MethodInvocation methodInvocation, AuthorizationResult authorizationResult) {
+		return null;
+	}
 }
