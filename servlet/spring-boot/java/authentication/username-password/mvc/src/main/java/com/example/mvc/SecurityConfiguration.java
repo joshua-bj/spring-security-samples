@@ -70,11 +70,11 @@ public class SecurityConfiguration {
 
 		@PostMapping
 		public Authentication login(@AuthenticationPrincipal UsernamePasswordAuthenticationToken token) {
-			CustomUser user = this.users.findCustomUserByEmail(token.getPrincipal().toString());
+			CustomUser user = this.users.findCustomUserByEmail(token.getName());
 			if (user == null) {
 				throw new UsernameNotFoundException("user not found");
 			}
-			if (!this.passwordEncoder.matches((String) token.getCredentials(), user.getPassword())) {
+			if (!this.passwordEncoder.matches((String) token.getCredentials(), user.password())) {
 				throw new BadCredentialsException("bad credentials");
 			}
 			return UsernamePasswordAuthenticationToken.authenticated(user, null, AuthorityUtils.createAuthorityList("ROLE_USER"));
