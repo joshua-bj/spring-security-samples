@@ -16,15 +16,10 @@
 
 package com.example.mvc;
 
-import java.util.Collection;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * A custom user representation.
@@ -32,19 +27,5 @@ import org.springframework.security.core.userdetails.UserDetails;
  * @author Rob Winch
  */
 @Table
-public record CustomUser(@Id String id, String email, @JsonIgnore String password) implements UserDetails {
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return AuthorityUtils.createAuthorityList("ROLE_USER");
-	}
-
-	@Override
-	public String getPassword() {
-		return this.password;
-	}
-
-	@Override
-	public String getUsername() {
-		return this.email;
-	}
+public record CustomUser(@Id String id, String email, @JsonIgnore String password) {
 }

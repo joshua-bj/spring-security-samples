@@ -16,17 +16,10 @@
 
 package com.example.mvc;
 
-import org.springframework.data.jdbc.repository.query.Modifying;
-import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 
 public interface CustomUserRepository extends CrudRepository<CustomUser, Long> {
 
 	CustomUser findCustomUserByEmail(String email);
 
-	@Query("""
-		UPDATE CUSTOM_USER SET password = :password WHERE email = :email
-	""")
-	@Modifying
-	Integer updatePasswordByEmail(String email, String password);
 }
