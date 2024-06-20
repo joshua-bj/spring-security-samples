@@ -29,7 +29,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -50,12 +49,18 @@ public class SecurityConfiguration {
 		return http.build();
 	}
 
+	@Bean
+	PasswordEncoder passwordEncoder() {
+		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+	}
+
 	@FormLoginController
 	public static class AuthController {
-		PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-
 		@Autowired
 		CustomUserRepository users;
+
+		@Autowired
+		PasswordEncoder passwordEncoder;
 
 		@GetMapping
 		@ExceptionHandler(AuthenticationException.class)

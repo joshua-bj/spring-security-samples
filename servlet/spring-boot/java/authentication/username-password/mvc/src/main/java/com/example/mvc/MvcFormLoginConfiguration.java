@@ -57,21 +57,4 @@ public class MvcFormLoginConfiguration implements WebMvcConfigurer {
 		return (exceptions) -> exceptions.authenticationEntryPoint(entryPoint);
 	}
 
-	/*@Bean
-	public Customizer<ExceptionHandlingConfigurer<HttpSecurity>> loginPage(RequestMappingHandlerMapping mapping) {
-		for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : mapping.getHandlerMethods().entrySet()) {
-			FormLoginController login = AnnotationUtils.findAnnotation(entry.getValue().getMethod().getDeclaringClass(), FormLoginController.class);
-			if (login == null) {
-				continue;
-			}
-			GetMapping get = AnnotationUtils.findAnnotation(entry.getValue().getMethod(), GetMapping.class);
-			if (get == null) {
-				continue;
-			}
-			String path = entry.getKey().getDirectPaths().iterator().next();
-			return (exceptions) -> exceptions.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(path));
-		}
-		return Customizer.withDefaults();
-	}*/
-
 }
