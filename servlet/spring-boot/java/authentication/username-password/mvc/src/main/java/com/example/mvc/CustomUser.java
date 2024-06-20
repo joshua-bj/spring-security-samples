@@ -16,6 +16,8 @@
 
 package com.example.mvc;
 
+import java.security.Principal;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.springframework.data.annotation.Id;
@@ -27,5 +29,9 @@ import org.springframework.data.relational.core.mapping.Table;
  * @author Rob Winch
  */
 @Table
-public record CustomUser(@Id String id, String email, @JsonIgnore String password) {
+public record CustomUser(@Id String id, String email, @JsonIgnore String password) implements Principal {
+	@Override
+	public String getName() {
+		return this.email;
+	}
 }
