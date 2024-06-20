@@ -1,0 +1,35 @@
+import org.gradle.api.tasks.testing.Test
+
+plugins {
+    alias(libs.plugins.io.spring.dependency.management)
+    alias(libs.plugins.org.springframework.boot)
+    id "nebula.integtest" version "8.2.0"
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://repo.spring.io/milestone" }
+    maven { url "https://repo.spring.io/snapshot" }
+}
+
+dependencies {
+    implementation platform(libs.org.springframework.data.spring.data.bom)
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+    implementation 'org.springframework.security:spring-security-data'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+    implementation 'com.h2database:h2'
+
+
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+
+}
