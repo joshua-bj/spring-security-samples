@@ -30,6 +30,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping
 public @interface FormLoginController {
-	@AliasFor(annotation = RequestMapping.class, attribute = "value")
+	@AliasFor(annotation = RequestMapping.class)
 	String value() default "/login";
 }
