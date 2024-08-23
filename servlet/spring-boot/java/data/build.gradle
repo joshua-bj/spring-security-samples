@@ -6,20 +6,25 @@ plugins {
 }
 
 repositories {
+	mavenLocal()
 	mavenCentral()
 	maven { url "https://repo.spring.io/milestone" }
 	maven { url "https://repo.spring.io/snapshot" }
 }
 
+ext["spring-security.version"] = "6.4.0-M3"
+
 dependencies {
 	implementation platform(libs.org.springframework.spring.framework.bom)
 	implementation platform(libs.org.springframework.security.spring.security.bom)
 	implementation platform(libs.org.springframework.data.spring.data.bom)
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.security:spring-security-data'
 	implementation 'com.h2database:h2'
+	implementation 'io.micrometer:micrometer-tracing-bridge-brave'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'

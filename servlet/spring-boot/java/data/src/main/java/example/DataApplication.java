@@ -16,19 +16,45 @@
 
 package example;
 
+import java.util.function.Supplier;
+
+import io.micrometer.observation.Observation;
+import io.micrometer.observation.Observation.Scope;
+import io.micrometer.observation.ObservationRegistry;
+import io.micrometer.observation.ObservationTextPublisher;
+import org.aopalliance.aop.Advice;
+import org.aopalliance.intercept.MethodInvocation;
+
+import org.springframework.aop.Pointcut;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Role;
+import org.springframework.security.authorization.AuthorizationDecision;
+import org.springframework.security.authorization.AuthorizationManager;
+import org.springframework.security.authorization.AuthorizationResult;
+import org.springframework.security.authorization.ObservationAuthorizationManager;
+import org.springframework.security.authorization.method.AuthorizationAdvisor;
 import org.springframework.security.authorization.method.AuthorizationAdvisorProxyFactory;
 import org.springframework.security.authorization.method.AuthorizationAdvisorProxyFactory.TargetVisitor;
+import org.springframework.security.authorization.method.AuthorizationManagerAfterMethodInterceptor;
+import org.springframework.security.authorization.method.AuthorizationManagerBeforeMethodInterceptor;
+import org.springframework.security.authorization.method.MethodAuthorizationDeniedHandler;
+import org.springframework.security.authorization.method.MethodInvocationResult;
+import org.springframework.security.authorization.method.PostAuthorizeAuthorizationManager;
+import org.springframework.security.authorization.method.PreAuthorizeAuthorizationManager;
 import org.springframework.security.authorization.method.PrePostTemplateDefaults;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.stereotype.Component;
+import org.springframework.util.function.SingletonSupplier;
 
 @SpringBootApplication
 @EnableMethodSecurity
@@ -37,7 +63,7 @@ public class DataApplication {
 	@Bean
 	@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 	static Customizer<AuthorizationAdvisorProxyFactory> skipValueTypes() {
-		return (f) -> f.setTargetVisitor(TargetVisitor.defaultsSkipValueTypes());
+		return (proxyFactory) -> proxyFactory.setTargetVisitor(TargetVisitor.defaultsSkipValueTypes());
 	}
 
 	@Bean
