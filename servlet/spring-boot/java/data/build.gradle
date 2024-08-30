@@ -3,6 +3,8 @@ plugins {
 	alias(libs.plugins.io.spring.dependency.management)
 	id "nebula.integtest" version "8.2.0"
 	id 'java'
+	id 'org.hibernate.orm' version '6.5.2.Final'
+	id "org.graalvm.buildtools.native" version "0.10.2"
 }
 
 repositories {
@@ -23,6 +25,12 @@ dependencies {
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+}
+
+hibernate {
+  enhancement {
+    enableAssociationManagement = true
+  }
 }
 
 tasks.withType(Test).configureEach {
