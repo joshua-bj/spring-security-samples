@@ -25,12 +25,13 @@ public class AuthorizationProxyFactoryAotProcessor implements BeanFactoryInitial
 		@Override
 		public void applyTo(GenerationContext context, BeanFactoryInitializationCode code) {
 			AuthorizationProxyFactory proxyFactory = this.beanFactory.getBean(AuthorizationProxyFactory.class);
-			AuthorizationProxyHints hints = this.beanFactory.getBean(AuthorizationProxyHints.class);
-			for (Class<?> type : hints.types()) {
-				Class<?> proxyClass = (Class<?>) proxyFactory.proxy(type);
-				context.getRuntimeHints().reflection().registerType(proxyClass,
-					MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.PUBLIC_FIELDS, MemberCategory.DECLARED_FIELDS);
-			}
+			this.beanFactory.getBeanProvider(AuthorizedClassesProvider.class).forEach((provider) -> {
+				provider.getAuthorizedClasses(this.beanFactory).forEach((clazz) -> {
+					Class<?> proxied = (Class<?>) proxyFactory.proxy(clazz);
+					context.getRuntimeHints().reflection().registerType(proxied,
+						MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.PUBLIC_FIELDS, MemberCategory.DECLARED_FIELDS);
+				});
+			});
 		}
 
 	}

@@ -23,8 +23,6 @@ public class AotProcessorTests {
 	private final GenerationContext context = mock(GenerationContext.class);
 	private final BeanFactoryInitializationCode code = mock(BeanFactoryInitializationCode.class);
 
-	private final DataAuthorizeReturnObjectAotProcessor data = new DataAuthorizeReturnObjectAotProcessor();
-	private final AuthorizeReturnObjectAotProcessor authorize = new AuthorizeReturnObjectAotProcessor();
 	private final AuthorizationProxyFactoryAotProcessor proxy = new AuthorizationProxyFactoryAotProcessor();
 
 	@Autowired
@@ -33,8 +31,6 @@ public class AotProcessorTests {
 	@Test
 	void findsAllNeededClassesToProxy() {
 		given(this.context.getRuntimeHints()).willReturn(this.hints);
-		this.data.processAheadOfTime(beanFactory).applyTo(this.context, this.code);
-		this.authorize.processAheadOfTime(beanFactory).applyTo(this.context, this.code);
 		this.proxy.processAheadOfTime(beanFactory).applyTo(this.context, this.code);
 		Collection<String> canonicalNames = new ArrayList<>();
 		this.hints.reflection().typeHints().forEach((hint) -> canonicalNames.add(hint.getType().getCanonicalName()));
