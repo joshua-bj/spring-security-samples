@@ -1,4 +1,4 @@
 org.springframework.beans.factory.aot.BeanFactoryInitializationAotProcessor=\
-example.AuthorizationProxyFactoryAotProcessor
+example.SecurityHintsAotProcessor
 org.springframework.aot.hint.RuntimeHintsRegistrar=\
 example.DataRuntimeHintsRegistrar

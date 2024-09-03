@@ -21,6 +21,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Role;
+import org.springframework.security.authorization.AuthorizationProxyFactory;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.core.annotation.AnnotationTemplateExpressionDefaults;
 import org.springframework.security.core.userdetails.User;
@@ -30,6 +31,18 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 @SpringBootApplication
 @EnableMethodSecurity
 public class DataApplication {
+
+	@Bean
+	@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+	static SecurityHintsRegistrar data(AuthorizationProxyFactory proxyFactory) {
+		return new AuthorizeReturnObjectDataHintsRegistrar(proxyFactory);
+	}
+
+	@Bean
+	@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+	static SecurityHintsRegistrar security(AuthorizationProxyFactory proxyFactory) {
+		return new AuthorizeReturnObjectHintsRegistrar(proxyFactory);
+	}
 
 	@Bean
 	@Role(BeanDefinition.ROLE_INFRASTRUCTURE)

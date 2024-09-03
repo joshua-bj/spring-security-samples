@@ -23,7 +23,7 @@ public class AotProcessorTests {
 	private final GenerationContext context = mock(GenerationContext.class);
 	private final BeanFactoryInitializationCode code = mock(BeanFactoryInitializationCode.class);
 
-	private final AuthorizationProxyFactoryAotProcessor proxy = new AuthorizationProxyFactoryAotProcessor();
+	private final SecurityHintsAotProcessor proxy = new SecurityHintsAotProcessor();
 
 	@Autowired
 	ConfigurableListableBeanFactory beanFactory;

@@ -4,22 +4,27 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.aot.hint.MemberCategory;
+import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.ResolvableType;
 import org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport;
+import org.springframework.security.authorization.AuthorizationProxyFactory;
 import org.springframework.security.authorization.method.AuthorizeReturnObject;
 import org.springframework.security.core.annotation.SecurityAnnotationScanner;
 import org.springframework.security.core.annotation.SecurityAnnotationScanners;
-import org.springframework.stereotype.Component;
 
-@Component
-class AuthorizedDataClassesProvider implements AuthorizedClassesProvider {
+class AuthorizeReturnObjectDataHintsRegistrar implements SecurityHintsRegistrar {
+	private final AuthorizationProxyFactory proxyFactory;
 	private final SecurityAnnotationScanner<AuthorizeReturnObject> scanner = SecurityAnnotationScanners.requireUnique(AuthorizeReturnObject.class);
 	private final Set<Class<?>> visitedClasses = new HashSet<>();
 
+	public AuthorizeReturnObjectDataHintsRegistrar(AuthorizationProxyFactory proxyFactory) {
+		this.proxyFactory = proxyFactory;
+	}
+
 	@Override
-	public Set<Class<?>> getAuthorizedClasses(ConfigurableListableBeanFactory beanFactory) {
-		Set<Class<?>> classes = new HashSet<>();
+	public void registerHints(RuntimeHints hints, ConfigurableListableBeanFactory beanFactory) {
 		for (String name : beanFactory.getBeanDefinitionNames()) {
 			ResolvableType type = beanFactory.getBeanDefinition(name).getResolvableType();
 			if (!RepositoryFactoryBeanSupport.class.isAssignableFrom(type.toClass())) {
@@ -29,8 +34,8 @@ class AuthorizedDataClassesProvider implements AuthorizedClassesProvider {
 			Class<?> entity = generics[1];
 			AuthorizeReturnObject authorize = beanFactory.findAnnotationOnBean(name, AuthorizeReturnObject.class);
 			if (authorize != null) {
-				classes.add(entity);
-				traverseType(entity, classes);
+				registerProxy(hints, entity);
+				traverseType(hints, entity);
 				continue;
 			}
 			Class<?> repository = generics[0];
@@ -41,15 +46,14 @@ class AuthorizedDataClassesProvider implements AuthorizedClassesProvider {
 				}
 				// optimistically assume that the entity needs wrapping if any of the
 				// repository methods use @AuthorizeReturnObject
-				classes.add(entity);
-				traverseType(entity, classes);
+				registerProxy(hints, entity);
+				traverseType(hints, entity);
 				break;
 			}
 		}
-		return classes;
 	}
 
-	private void traverseType(Class<?> clazz, Set<Class<?>> classes) {
+	private void traverseType(RuntimeHints hints, Class<?> clazz) {
 		if (clazz == Object.class || this.visitedClasses.contains(clazz)) {
 			return;
 		}
@@ -60,9 +64,15 @@ class AuthorizedDataClassesProvider implements AuthorizedClassesProvider {
 				continue;
 			}
 			Class<?> returnType = m.getReturnType();
-			classes.add(returnType);
-			traverseType(returnType, classes);
+			registerProxy(hints, returnType);
+			traverseType(hints, returnType);
 		}
+	}
+
+	private void registerProxy(RuntimeHints hints, Class<?> clazz) {
+		Class<?> proxied = (Class<?>) this.proxyFactory.proxy(clazz);
+		hints.reflection().registerType(proxied, MemberCategory.INVOKE_PUBLIC_METHODS,
+				MemberCategory.PUBLIC_FIELDS, MemberCategory.DECLARED_FIELDS);
 	}
 
 }
