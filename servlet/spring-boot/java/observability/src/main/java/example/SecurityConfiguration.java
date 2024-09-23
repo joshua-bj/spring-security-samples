@@ -18,6 +18,8 @@ package example;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionOperations;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -34,9 +36,13 @@ import static org.springframework.security.config.Customizer.withDefaults;
  * @author Rob Winch
  * @since 5.0
  */
-@Configuration
+@Configuration("sec")
 @EnableMethodSecurity
 public class SecurityConfiguration {
+
+	public AuthorizationDecision hasRole(MethodSecurityExpressionOperations root, String role) {
+		return new MyAuthorizationDecision(root.hasRole(role), "some value");
+	}
 
 	@Bean
 	SecurityFilterChain springFilterChain(HttpSecurity http) throws Exception {

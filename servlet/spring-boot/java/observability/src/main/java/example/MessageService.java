@@ -41,7 +41,7 @@ public class MessageService {
 	 * Gets a message if admin.
 	 * @return the message
 	 */
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("@sec.hasRole(#root, 'ADMIN')")
 	public String findSecretMessage() {
 		return "Hello Admin!";
 	}
