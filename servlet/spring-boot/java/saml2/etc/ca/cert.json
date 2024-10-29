@@ -1,0 +1,6 @@
+{
+    "CN": "Spring Security Saml 2.0 Samples Certificate",
+    "hosts": [
+        "*.xip.io"
+    ]
+}

@@ -1,0 +1,34 @@
+version: '2'
+
+services:
+  idp-one.127-0-0-1.nip.io:
+    image: kristophjunge/test-saml-idp:1.15
+    volumes:
+      - ./metadata/authsources.php:/var/www/simplesamlphp/config/authsources.php
+      - ./metadata/one-relyingparties.php:/var/www/simplesamlphp/metadata/saml20-sp-remote.php  
+      
+  idp-two.127-0-0-1.nip:
+    image: kristophjunge/test-saml-idp:1.15
+    volumes:
+      - ./metadata/authsources.php:/var/www/simplesamlphp/config/authsources.php
+      - ./metadata/two-relyingparties.php:/var/www/simplesamlphp/metadata/saml20-sp-remote.php
+
+  gencert:
+    image: cfssl/cfssl
+    volumes:
+      - .:/work
+    working_dir: /work
+    entrypoint: /bin/bash
+    command:
+      - ./ca/generate.sh
+
+  nginx:
+    image: nginx:stable
+    links:
+      - idp-one.127-0-0-1.nip.io
+      - idp-two.127-0-0-1.nip.io
+    volumes:
+      - ./nginx:/etc/nginx:ro
+    ports:
+      - '80:80'
+      - '443:443'
