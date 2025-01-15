@@ -1,0 +1,4 @@
+## Joshua's comments
+This is really interesting, access the REST endpoint by [http://localhost:8083/test/hello](http://localhost:8083/test/hello), when the first time access this endpoint, before login, the page will be redirect to the `http://localhost:8083/` first, then redirect to the `/login`. The consequence is when redirect back after login, the page back to `http://localhost:8083/`.
+
+This is only happened when the first time test redirect back, after logout then try to access [http://localhost:8083/test/hello](http://localhost:8083/test/hello) again, there is no interval `http://localhost:8083/`, then redirect back works fine.
